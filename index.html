@@ -57,26 +57,23 @@
         );
         canvasCtx.restore();
 
-        if (
-          results.rightHandLandmarks &&
-          results.faceLandmarks &&
-          results.faceLandmarks[0] // nose or mouth
-        ) {
-          const handTip = results.rightHandLandmarks[8]; // index fingertip
-          const mouthCenter = results.faceLandmarks[13]; // approximate upper lip
+       if (
+  results.rightHandLandmarks &&
+  results.faceLandmarks &&
+  results.faceLandmarks[13] // approximate mouth
+) {
+  const handTip = results.rightHandLandmarks[8]; // index fingertip
+  const mouthCenter = results.faceLandmarks[13]; // upper lip area
 
-          const dist = getDistance(handTip, mouthCenter);
-          if (dist < 0.1) {
-            handNearMouthCounter++;
-            if (handNearMouthCounter > 5) {
-              // Send message to React Native
-              window.ReactNativeWebView?.postMessage('medicine_taken');
-              handNearMouthCounter = 0;
-            }
-          } else {
-            handNearMouthCounter = 0;
-          }
-        }
+  const dist = getDistance(handTip, mouthCenter);
+  console.log('Distance:', dist);
+
+  if (dist < 0.1) {
+    console.log('Medicine detected!');
+    window.ReactNativeWebView?.postMessage('medicine_taken');
+  }
+}
+
       });
 
       const camera = new Camera(videoElement, {
